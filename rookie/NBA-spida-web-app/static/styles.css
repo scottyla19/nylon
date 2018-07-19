@@ -1,0 +1,22 @@
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+#tbl-div td{
+    border-bottom: 1px solid #ddd;
+    padding: 8px;
+}
+
+
+#tbl-div tr:nth-child(even){background-color: #f2f2f2;}
+#tbl-div td:nth-child(2){color: #aace9f;}
+#tbl-div td:nth-child(3){color: #3e75af;}
+#tbl-div td:nth-child(4){color: #e19d99;}
+#tbl-div tr:hover {background-color: #ddd;}
+
+#tbl-div th {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 2px solid black;
+    color: black;
+}
