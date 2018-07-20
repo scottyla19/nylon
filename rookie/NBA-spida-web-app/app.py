@@ -31,10 +31,15 @@ def comparePlayer(player):
     X = train.iloc[:,2:]
     y = playerdf.iloc[:,2:]
 
+    weights = np.array([0, .6, .7,1,.2,.2,.2,.2,.2,.2,.2,.2,.2,
+                    .2,.2,.2,.2,.2,.2, .8,.2,.2,.2,.2,.8,
+                   .7,.5,0,.6,.8,.6,.8,.8,.8,.8,1,
+                    .8,1,.8,.8,1,1,1,1,1,1,1,1,0])
 
-    nbrs = NearestNeighbors(n_neighbors=5)
+    nbrs = NearestNeighbors(n_neighbors=10,metric='wminkowski', p=2,
+                           metric_params={'w': weights})
     nbrs.fit(X)
-    neighbs = nbrs.kneighbors(y, 5, return_distance=False)
+    neighbs = nbrs.kneighbors(y, 10, return_distance=False)
     comparr = []
     for n in neighbs:
         comparr = (train.iloc[n,0].values)
@@ -69,6 +74,7 @@ def spidaPlot( categories, title,player):
     offMin = data.ExpMin.loc[categories]
     offMax = data.ExpMax.loc[categories]
     offRook = data.PlayerRookie.loc[categories]
+    print(offRook)
     N = len(categories)
 
     # We are going to plot the first line of the data frame.
@@ -106,14 +112,14 @@ def spidaPlot( categories, title,player):
       # fill = 'toself'
     ),
     go.Scatterpolar(
-        name="Low Comps",
+        name="Expected Min",
       r = offMin,
       theta = categories,
       opacity=0.5
       # fill = 'toself'
     ),
     go.Scatterpolar(
-        name="High Comps",
+        name="Expected Max",
       r = offMax,
       theta = categories,
       opacity=0.5
@@ -131,9 +137,41 @@ def spidaPlot( categories, title,player):
       title=title,
       height=500
     )
+    testData = cdf[['PlayerRookie','ExpMin','ExpYr2','ExpMax']]
+    if testData.dropna().empty:
+        # offRook = testData.PlayerRookie.loc[categories]
+        plotData = [go.Scatterpolar(
+          name="2017-18",
+          r = offRook,
+          theta = categories,
+          opacity=0.5,
+          marker = dict(
+        color = ('rgb(255,127,14)'))
+          # fill = 'toself'
+        )]
+        return plotData,layout
     return plotData, layout
 
-def makeTable(dataframe):
+def makeTable(player, columns):
+    data, clist = comparePlayer(player)
+    if data.dropna().empty:
+        return 'Player projections not available for {}'.format(player)
+
+    data.drop(['Player','Season'], axis=0, inplace=True)
+    data = data.round(3)
+    # data.reset_index(inplace=True)
+    # data.rename(columns={'index':'stat'}, inplace=True)
+    cols = ['ExpMin','ExpYr2','ExpMax']
+
+    data[cols] = data[cols].applymap(lambda x: '{:,g}'.format(x))
+
+    tbl = data.loc[columns,:]
+
+    tbl.reset_index(inplace=True)
+
+    dataframe = tbl[['index','ExpMin','ExpYr2','ExpMax']]
+    dataframe.rename(columns={'index':'','ExpYr2':'Projected'}, inplace=True)
+    # dataframe = tbl[columns]
     rows = []
     for i in range(len(dataframe)):
         row = []
@@ -168,23 +206,38 @@ app.layout = html.Div([
         value="Donovan Mitchell"
 
     ),
-    html.Div(id='my-div'),
+
     html.Img(id='player-pic'),
-    dcc.Graph(id='graph-basic-offense'),
-    dcc.Graph(id='graph-misc'),
-    dcc.Graph(id='graph-shoot-rates'),
-    dcc.Graph(id='graph-adv'),
-    html.Div(id='tbl-div')
+    html.Div(id='comps-div'),
+    html.Div([html.Div(id='tbl-basic-offense',className='tbl-div'),
+            dcc.Graph(id='graph-basic-offense')],
+            id='basic-offense',className='tbl-graph-container'
+    ),
+    html.Div([html.Div(id='tbl-misc',className='tbl-div'),
+            dcc.Graph(id='graph-misc')],
+            id='misc',className='tbl-graph-container'
+    ),html.Div([html.Div(id='tbl-shoot-rates',className='tbl-div'),
+            dcc.Graph(id='graph-shoot-rates')],
+            id='shoot-rates',className='tbl-graph-container'
+    ),html.Div([html.Div(id='tbl-adv',className='tbl-div'),
+            dcc.Graph(id='graph-adv')],
+            id='adv',className='tbl-graph-container'
+    )
+#
+# dcc.Graph(id='graph-misc'),
+# dcc.Graph(id='graph-shoot-rates'),
+# dcc.Graph(id='graph-adv')
 ])
 
 
 @app.callback(
-    Output(component_id='my-div', component_property='children'),
+    Output(component_id='comps-div', component_property='children'),
     [Input(component_id='name-dropdown', component_property='value')]
 )
 def updateComps(input_value):
     cdf, clist = comparePlayer(input_value)
-    return 'Comparable Players "{}"'.format(clist)
+    comps = [html.H3('Comparable Players: ') , html.H4(' {}'.format(', '.join(clist)))]
+    return comps
 
 @app.callback(
     Output(component_id='graph-basic-offense', component_property='figure'),
@@ -231,22 +284,34 @@ def advGraph(input_value):
         'layout': layt
     }
 @app.callback(
-    Output(component_id='tbl-div', component_property='children'),
+    Output(component_id='tbl-basic-offense', component_property='children'),
     [Input(component_id='name-dropdown', component_property='value')]
 )
 def showTable(input_value):
-    data, clist = comparePlayer(input_value)
-    if data.dropna().empty:
-        return 'Player projections not available for {}'.format(input_value)
+    return makeTable(input_value, ['2P','2PA','3P','3PA','FT','FTA','PTS'])
 
-    data.drop(['Player','Season'], axis=0, inplace=True)
-    data = data.round(3)
-    data.reset_index(inplace=True)
-    data.rename(columns={'index':'stat'}, inplace=True)
-    cols = ['ExpMin','ExpYr2','ExpMax']
+@app.callback(
+    Output(component_id='tbl-misc', component_property='children'),
+    [Input(component_id='name-dropdown', component_property='value')]
+)
+def showTable(input_value):
+    return makeTable(input_value, ['TRB','AST','STL', 'TOV','PF'])
 
-    data[cols] = data[cols].applymap(lambda x: '{:,g}'.format(x))
-    return makeTable(data[['stat','ExpMin','ExpYr2','ExpMax']])
+@app.callback(
+    Output(component_id='tbl-shoot-rates', component_property='children'),
+    [Input(component_id='name-dropdown', component_property='value')]
+)
+def showTable(input_value):
+    return makeTable(input_value, ['FG%', '2P%','3P%','eFG%','TS%', '3PAr', 'FTr'])
+
+@app.callback(
+    Output(component_id='tbl-adv', component_property='children'),
+    [Input(component_id='name-dropdown', component_property='value')]
+)
+def showTable(input_value):
+    return makeTable(input_value, ['DRB%','TRB%','AST%', 'TOV%','USG%', 'VORP', 'BPM'])
+
+
 @app.callback(
     dash.dependencies.Output('player-pic', 'src'),
     [dash.dependencies.Input('name-dropdown', 'value')])
