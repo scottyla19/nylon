@@ -200,29 +200,48 @@ app.layout = html.Div([
         rel='stylesheet',
         href='/static/styles.css'
     ),
-    dcc.Dropdown(
-        id='name-dropdown',
-        options= namesOptions,
-        value="Donovan Mitchell"
-
+    html.Link(
+        rel='stylesheet',
+        href='https://fonts.googleapis.com/css?family=PT+Sans'
     ),
+    html.Div([html.H1('NBA Spida Web App Player Projections'),
+            html.H4('A simple nearest neighbors classifier for NBA rookies.')],className='header'),
+    html.Div([
+        dcc.Dropdown(
+            id='name-dropdown',
+            options= namesOptions,
+            value="Donovan Mitchell"
 
-    html.Img(id='player-pic'),
+        ),
+
+        html.Img(id='player-pic'),
+        # html.P('How it works:'),
+        # html.Ol([html.Li('Select your favorite rookie from the list below.',className='steps-list-item'),
+        #         html.Li('The app then uses the k-nearest neighbors (KNN) algorithm to select the 10 most statistically similar historical rookies',className='steps-list-item'),
+        #         html.Li('Using the 10 comparable players we get the mean difference from year 1 to year 2 and add it to our current year stats.',className='steps-list-item'),
+        #         html.Li('Get the 90% confidence interval to get the range of minimum and maximum expected outputs for next season.',className='steps-list-item')],className='stepsList'),
+                ],
+        id='player-select-div'),
+    html.H3('Comparable Players:',style={'padding':'10px'}),
     html.Div(id='comps-div'),
     html.Div([html.Div(id='tbl-basic-offense',className='tbl-div'),
-            dcc.Graph(id='graph-basic-offense')],
+            dcc.Graph(id='graph-basic-offense',className='graph-div', style={'max-width':800})],
             id='basic-offense',className='tbl-graph-container'
+    ),html.Div([html.Div(id='tbl-adv',className='tbl-div'),
+            dcc.Graph(id='graph-adv',className='graph-div', style={'max-width':800})],
+            id='adv',className='tbl-graph-container'
     ),
     html.Div([html.Div(id='tbl-misc',className='tbl-div'),
-            dcc.Graph(id='graph-misc')],
+            dcc.Graph(id='graph-misc',className='graph-div', style={'max-width':800})],
             id='misc',className='tbl-graph-container'
     ),html.Div([html.Div(id='tbl-shoot-rates',className='tbl-div'),
-            dcc.Graph(id='graph-shoot-rates')],
+            dcc.Graph(id='graph-shoot-rates',className='graph-div', style={'max-width':800})],
             id='shoot-rates',className='tbl-graph-container'
-    ),html.Div([html.Div(id='tbl-adv',className='tbl-div'),
-            dcc.Graph(id='graph-adv')],
-            id='adv',className='tbl-graph-container'
-    )
+    ),
+    html.Div([
+        html.Div('Created by Scott LaForest'),
+        html.Div(['All data is from ',  html.A("Basketball-Reference.com", href='https://www.basketball-reference.com/', target="_blank")])
+    ],className='footer')
 #
 # dcc.Graph(id='graph-misc'),
 # dcc.Graph(id='graph-shoot-rates'),
@@ -236,8 +255,31 @@ app.layout = html.Div([
 )
 def updateComps(input_value):
     cdf, clist = comparePlayer(input_value)
-    comps = [html.H3('Comparable Players: ') , html.H4(' {}'.format(', '.join(clist)))]
-    return comps
+    cells = []
+    for i, v in enumerate(clist):
+        cells.append(html.Div(children='{}. {}'.format(i+1,v), className='comp-cell'))
+    html.Div(html.H3('Comparable Players:'))
+    return html.Div(cells, className='comps-container')
+    # row1 = []
+    # row2 = []
+    # rows = []
+    # for i, v in enumerate(clist):
+    #
+    #
+    #     cell = html.Td(children='{}. {}'.format(i+1,v))
+    #     if i < 5:
+    #         row1.append(cell)
+    #     else:
+    #         row2.append(cell)
+    # rows.append(html.Tr(row1))
+    # rows.append(html.Tr(row2))
+    #
+    # return html.Table(
+    #     [html.Tr([html.Th(html.H3('Comparable Players'))] +
+    #     rows
+    # )
+    # comps = [html.H3('Comparable Players: ') , html.H4(' {}'.format(', '.join(clist)))]
+    # return comps
 
 @app.callback(
     Output(component_id='graph-basic-offense', component_property='figure'),
