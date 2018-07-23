@@ -4,8 +4,6 @@ import dash_html_components as html
 from dash.dependencies import Input, Output
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from sklearn.neighbors import NearestNeighbors
 import plotly.graph_objs as go
 
@@ -57,7 +55,16 @@ def comparePlayer(player):
 
     compdf['ExpMax'] = compdf.ExpYr2 + (alpha * compdf.StdYr2Comp/np.sqrt(5))
     compdf['ExpMin'] = compdf.ExpYr2 - (alpha * compdf.StdYr2Comp/np.sqrt(5))
-    return compdf, complist
+    compdf[(compdf.ExpYr2 < 0) & ((compdf.index != 'VORP')&(compdf.index != 'BPM'))] = 0
+    data = compdf[['PlayerRookie','ExpMin','ExpYr2','ExpMax']]
+    tempdf = compdf[['PlayerRookie','ExpMin','ExpYr2','ExpMax']]
+
+    tempdf[tempdf < 0] = 0
+    tempdf.loc['BPM',:] = data.loc['BPM',:].values
+    tempdf.loc['VORP',:] = data.loc['VORP',:].values
+
+    return tempdf, complist
+
 
 def spidaPlot( categories, title,player):
     cdf, clist = comparePlayer(player)
@@ -74,7 +81,6 @@ def spidaPlot( categories, title,player):
     offMin = data.ExpMin.loc[categories]
     offMax = data.ExpMax.loc[categories]
     offRook = data.PlayerRookie.loc[categories]
-    print(offRook)
     N = len(categories)
 
     # We are going to plot the first line of the data frame.
@@ -214,7 +220,7 @@ app.layout = html.Div([
 
         ),
 
-        html.Img(id='player-pic'),
+        html.Img(id='player-pic',src='/static/picholder.png'),
         # html.P('How it works:'),
         # html.Ol([html.Li('Select your favorite rookie from the list below.',className='steps-list-item'),
         #         html.Li('The app then uses the k-nearest neighbors (KNN) algorithm to select the 10 most statistically similar historical rookies',className='steps-list-item'),
@@ -364,6 +370,7 @@ def update_image_src(input_value):
     if input_value == 'Dennis Smith':
         nameList = input_value.split(" ")
         nameList[1] = nameList[1] + '_' + 'jr'
+    
     return  'https://nba-players.herokuapp.com/players/{}/{}'.format(nameList[1], nameList[0])
 
 
