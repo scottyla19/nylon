@@ -58,12 +58,12 @@ table {
 }
 #player-select-div{
   display: flex;
-  flex-flow: row wrap;
-  align-items: flex-end;
+  flex-flow: column-reverse wrap;
+  align-items: flex-start;
     padding-left: 10px;
 }
 #name-dropdown{
-  width: 300px;
+  width: 350px;
 }
 .stepsList{
   min-width: 300px;

@@ -9,7 +9,7 @@ import plotly.graph_objs as go
 
 app = dash.Dash(__name__, static_folder='static')
 server = app.server
-app.title = "NBA Spida Web App Projections"
+app.title = "Spida Web App Projections"
 app.css.config.serve_locally = True
 app.scripts.config.serve_locally = True
 
@@ -210,7 +210,7 @@ app.layout = html.Div([
         rel='stylesheet',
         href='https://fonts.googleapis.com/css?family=PT+Sans'
     ),
-    html.Div([html.H1('NBA Spida Web App Player Projections'),
+    html.Div([html.H1('Spida Web App Player Projections'),
             html.H4('A simple nearest neighbors classifier for NBA rookies.')],className='header'),
     html.Div([
         dcc.Dropdown(
@@ -245,7 +245,8 @@ app.layout = html.Div([
             id='shoot-rates',className='tbl-graph-container'
     ),
     html.Div([
-        html.Div('Created by Scott LaForest'),
+        html.Div(['Created by ', html.A("Scott LaForest", href='https://github.com/scottyla19', target="_blank")]),
+        html.Div(['Player images provide by  ',  html.A("NBA headshots API", href='https://nba-players.herokuapp.com/', target="_blank")]),
         html.Div(['All data is from ',  html.A("Basketball-Reference.com", href='https://www.basketball-reference.com/', target="_blank")])
     ],className='footer')
 #
@@ -370,7 +371,7 @@ def update_image_src(input_value):
     if input_value == 'Dennis Smith':
         nameList = input_value.split(" ")
         nameList[1] = nameList[1] + '_' + 'jr'
-    
+
     return  'https://nba-players.herokuapp.com/players/{}/{}'.format(nameList[1], nameList[0])
 
 
