@@ -1,6 +1,6 @@
 var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = 700- margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 600- margin.left - margin.right,
+    height = 450 - margin.top - margin.bottom;
 
 
 
@@ -9,16 +9,16 @@ var x = d3.scaleLinear().range([0, width]);
 var y = d3.scaleLinear().range([height, 0]);
 var recth = d3.scaleLinear().range([1,30])
 var rectw = d3.scaleLinear().range([1,30])
-// define the line
-// var valueline = d3.line()
-//     .x(function(d) { return x(d.date); })
-//     .y(function(d) { return y(d.close); });
+
 var div = d3.select("body").append("div")	
     .attr("class", "tooltip")				
     .style("opacity", 0);
 var select = d3.select('body')
   .append('select')
-  	.attr('id','type-select')
+      .attr('id','type-select')
+      .style("position","absolute")
+      .style("left", "10px")
+   .style("top", "5px")
     .on('change',onchange)
     
 // append the svg obgect to the body of the page
@@ -33,6 +33,7 @@ var svg = d3.select("body").append("svg")
   .append("g")
     .attr("transform",
           "translate(" + margin.left + "," + margin.top + ")");
+
 
 plotGraph("All")
 function onchange() {
@@ -148,7 +149,7 @@ function plotGraph(selectedVal){
             .attr("y", function(d) { return y(d.EFG_PCT); })
             .attr("height", function(d) { return d.UAST_PCT*30; })
             .attr("width", function(d) { return d.RA_AST_PCT*30; })
-            .attr("fill-opacity","0.5")
+            .attr("fill-opacity","0.7")
             .style("fill", function(d) {return "url(#gradient-" + d.PID + ")";})
             .style("stroke","black")
             .style("stroke-width","1px")
@@ -202,8 +203,9 @@ function plotGraph(selectedVal){
       .attr("dy", "1em")
       .attr("class","label-text")
       .style("text-anchor", "middle")
-      .text("eFG%");      
-      svg.append("text")
+      .text("eFG%");   
+         
+    svg.append("text")
       .attr("x", (width / 2))             
       .attr("y", 0 + (margin.top))
       .attr("text-anchor", "middle")  
@@ -211,9 +213,8 @@ function plotGraph(selectedVal){
       .text("Traffic Light Graphic Delight");
       
       
-      
     
       
   })
 }
- 
+
