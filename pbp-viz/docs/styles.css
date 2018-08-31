@@ -1,0 +1,118 @@
+.container{
+    background: darkgrey;
+}
+div.tooltip {
+    position: absolute;
+    text-align: center;
+    width: 150px;
+    color:white;
+    padding: 2px;
+    font: 12px sans-serif;
+    background: black;
+    border: 0px;
+    border-radius: 8px;
+    pointer-events: none;
+  }
+  h1{
+      background: white;
+      margin-bottom: 0px;
+  }
+  label{
+      margin-bottom: 0px;
+      padding-bottom: 0;
+  }
+  #player-select{
+      margin-top: 0;
+      padding-top: 0;
+    position: absolute;
+    width: 150px;
+    top:105px;
+    left:10px;
+  }
+  svg{
+      background: darkgrey;
+  }
+
+  .label-text{
+      font-size: 14px;
+      
+  }
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+  }
+  
+.cluster-BLKdone, .cluster-BLK{
+    fill:yellow;
+    stroke: white;
+    fill-opacity: .4;
+}
+.cluster-STLdone, .cluster-STL{
+    fill:purple;
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-ASTdone, .cluster-AST{
+    fill:orange;
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-TOdone, .cluster-TO{
+    fill:rgb(0, 204, 255);
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-OREBdone, .cluster-OREB{
+    fill:rgb(234, 0, 255);
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-DREBdone, .cluster-DREB{
+    fill:rgb(180, 47, 233);
+    stroke: white;
+    fill-opacity: .3;
+}
+
+.cluster-2PT-Makedone, .cluster-2PT-Make{
+    fill:rgb(6, 223, 6);
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-2PT-Missdone, .cluster-2PT-Miss{
+    fill:red;
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-3PT-Makedone, .cluster-3PT-Make{
+    fill:rgb(6, 223, 6);
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-3PT-Missdone, .cluster-3PT-Miss{
+    fill:red;
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-FT-Makedone, .cluster-FT-Make{
+    fill:rgb(6, 223, 6);
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-FT-Missdone, .cluster-FT-Miss{
+    fill:red;
+    stroke: white;
+    fill-opacity: .3;
+}
+.cluster-PFdone, .cluster-PF{
+    fill:black;
+    stroke: white;
+    fill-opacity: .4;
+}
+ 
+/* #type-select {
+    position: absolute;
+    width: 200px;
+    top:40px;
+    left:25px;
+} */
