@@ -1,0 +1,58 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  
+  <title>NBA Ast-to-TOV Tree Visualization</title>
+  <meta name="description" content="NBA Ast-to-TOV Tree Visualization">
+  <meta name="author" content="Scott LaForest">
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+
+</head>
+
+<body>
+    <div id="main" class="container">
+        <h1 id="title">NBA Ast-to-TOV Tree</h1>
+        <div id="button">
+                <button type="submit" class="btn" id="startBtn" onclick="startClicked()"> 
+                        <i class="far fa-play-circle fa-2x"></i> 
+                </button>
+        </div>
+        
+        <div id="sound">
+                <button type="submit" class="btn" id="soundBtn"onclick="changeSound()">
+                        <i class="fas fa-volume-up fa-2x"></i>
+                </button>
+        </div>
+            <script src="viz.js"></script>
+    </div>
+    <div class="footer">
+        <div class="footer-child">
+            <div>
+                Created by Scott LaForest
+            </div>
+            <div>
+                   Twitter: <a href="https://twitter.com/scottyla1">@scottyla1</a>
+            </div>
+            <div>
+                    Github: <a href="https://github.com/scottyla19">scottyla19</a>
+            </div>
+        </div>
+        <div class="footer-child">
+                <div>
+                        Data provided by: <a href="https://stats.nba.com/">stats.nba.com</a>
+                 </div>
+                 <div>
+                        Sound effects provided by: <a href="https://freesound.org/people/Mattix/sounds/402067/">Mattix</a> and <a href="https://freesound.org/people/OwlStorm/sounds/404767/">OwlStorm</a>
+                 </div>
+                 
+        </div>
+        
+    </div>
+  
+</body>
+</html>

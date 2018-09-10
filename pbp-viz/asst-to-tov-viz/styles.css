@@ -1,0 +1,95 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+  h1{
+      background: white;
+      margin-bottom: 0px;
+  }
+  label{
+      margin-bottom: 0px;
+      padding-bottom: 0;
+  }
+  #player-select{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+      margin-top: 0;
+      padding-top: 0;
+    position: absolute;
+    width: 200px;
+    top:90px;
+    left:450px;
+    height:30px;
+  }
+
+  #button > button{
+    margin-top: 0;
+    padding-top: 0;
+  position: absolute;
+  width: 75px;
+  top:90px;
+  left:365px;
+  height:30px;
+  border-radius: 10px;
+    background-color: darkgrey;
+  color:white;
+  border: 0;
+
+}
+#sound > button{
+    margin-top: 0;
+    padding-top: 0;
+  position: absolute;
+  width: 50px;
+  top:90px;
+  left:300px;
+  height:30px;
+  border-radius: 10px;
+    background-color: darkgrey;
+  color:white;
+  border: 0;
+
+}
+  svg{
+    font-family: 'Press Start 2P', cursive;
+    font-size: 10px;
+      background: darkgrey;
+  }
+
+  .label-text{
+      font-size: 14px;
+      
+  }
+  .link {
+    fill: none;
+    stroke: #ccc;
+    stroke-width: 2px;
+  }
+  
+
+.cluster-ASTdone, .cluster-AST{
+    fill:rgb(45,201,55);
+    stroke: white;
+    fill-opacity: .5;
+}
+.cluster-TOdone, .cluster-TO{
+    fill:rgb(204,50,50);
+    stroke: white;
+    fill-opacity: .5;
+}
+.footer{
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    display:flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    max-width: 700px;
+   
+}
+.footer-child{
+    
+}
+.footer div:last-child {
+   justify-self: flex-end;
+  }
