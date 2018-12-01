@@ -70,12 +70,13 @@ body{
 
 .cluster-ASTdone, .cluster-AST{
     fill:rgb(45,201,55);
-    stroke: white;
+    stroke: black;
     fill-opacity: .5;
+    /* fill: url("http://icons.iconarchive.com/icons/custom-icon-design/flatastic-10/256/Sport-basketball-icon.png") */
 }
 .cluster-TOdone, .cluster-TO{
     fill:rgb(204,50,50);
-    stroke: white;
+    stroke: black;
     fill-opacity: .5;
 }
 .footer{

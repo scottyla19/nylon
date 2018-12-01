@@ -155,7 +155,7 @@ function onchange() {
 }
 
 async function getAstNames() {
-  d3.select("#title").text(pName + " Ast-to-TOV Tree")
+  d3.select("#title").text(pName + " Ast-to-TOV Tree");
   var myDat = [];
   d3.csv("short-pbp-2017-18.csv")
     .then(function(data) {
@@ -376,6 +376,28 @@ function runViz() {
       }
     });
 
+    var defs = svg.append("svg:defs");
+    filteredData.forEach(function(d, i) {
+      var imgURL = ""
+      if (d.STAT_TYPE == "AST") {
+        imgURL =  "basketball.png"//"http://icons.iconarchive.com/icons/custom-icon-design/flatastic-10/256/Sport-basketball-icon.png";
+      } else {
+        imgURL =  "clipboard-coach.png"//"https://www.svgrepo.com/show/82319/clipboard-outline.svg";
+      }
+      defs
+        .append("svg:pattern")
+        .attr("id", "dot-img-" + d.STAT_TYPE)
+        .attr("width", 32)
+        .attr("height", 32)
+        // .attr("patternUnits", "userSpaceOnUse")
+        .append("svg:image")
+        .attr("xlink:href", imgURL )
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr("x", 2)
+        .attr("y", 0);
+    });
+
     var circles = svg
       .selectAll("circle")
       .data(filteredData)
@@ -389,7 +411,10 @@ function runViz() {
       })
       .attr("cx", width / 2)
       .attr("cy", (height + margin.bottom) / 2)
-      .attr("r", 4);
+      .attr("r", 16)
+      .style("fill", function(d) {
+        return "url(#dot-img-" + d.STAT_TYPE + ")";
+      });
 
     trans();
     function trans() {
