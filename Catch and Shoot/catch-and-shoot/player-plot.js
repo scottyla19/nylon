@@ -161,14 +161,6 @@ svg
   .attr("height", "100%")
   .attr("fill", "lightgrey");
 
-//  svg.append("circle")
-//  .attr("cx",width / 2)
-//  .attr("cy",height / 2)
-//  .attr("r",distanceMultilier*30)
-// //  .attr("fill-opacity","0.5")
-// //  .attr("fill","#2dc937")
-//  .style("stroke","#2dc937")
-//  .style("stroke-width","3px");
 
 svg
   .append("circle")
@@ -216,11 +208,8 @@ svg.selectAll(".icon").remove()
       }else{
         
       }
-      // imgURL =  "https://twemoji.maxcdn.com/2/72x72/1f3c0.png"
-      // // imgURL = "https://twemoji.maxcdn.com/2/72x72/2b55.png"
-    }
-    // imgURL =  "https://twemoji.maxcdn.com/2/72x72/1f3c0.png"
-    //  imgURL = "https://twemoji.maxcdn.com/2/72x72/2b55.png"
+    
+
     defs
       .append("svg:pattern")
       .attr("id", "grump_avatar" + i)
