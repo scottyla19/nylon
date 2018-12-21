@@ -11,11 +11,15 @@ library(shiny)
 library(r2d3)
 library(tidyverse)
 library(stringr)
-efg <- read.csv('cs-over-50-fga.csv')
-namesdf <- efg %>% separate(PLAYER, c("First", "Last", "Suffix"), remove = FALSE, sep = " ") %>% arrange(Last)
-teamsdf <- efg %>%  arrange(TEAM)
+# efg <- read.csv('cs-over-50-fga.csv')
+# namesdf <- efg %>% separate(PLAYER, c("First", "Last", "Suffix"), remove = FALSE, sep = " ") %>% arrange(Last)
+# teamsdf <- efg %>%  arrange(TEAM)
+# 
+# efg$isSelected <- TRUE
 
-efg$isSelected <- TRUE
+longTeam <- read.csv("longTeamByRange.csv")
+
+teamsdf<- longTeam %>% arrange(TEAM_ABRV)
 pbpshort <- read.csv('all-log-short.csv')
 filteredata <- pbpshort
 namesdf <- pbpshort %>% separate(PLAYER_NAME, c("First", "Last", "Suffix"), remove = FALSE, sep = " ") %>% arrange(Last)
@@ -39,26 +43,33 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       width = 3,
-      selectInput("selectPlayer", "Select your player:",unique(namesdf$PLAYER_NAME)),
-      selectInput("selectLocation", "Home or Away:",unique(pbpshort$HOMEAWAY), multiple = TRUE),
-      selectInput("selectOpponent", "Opponent(s):",NULL, multiple = TRUE),
-      selectInput("selectGame", "Game(s):",unique(pbpshort$DATE_OPPONENT), multiple = TRUE),
-      selectInput("selectPeriod", "Period(s):",unique(pbpshort$PERIOD), multiple = TRUE),
-      selectInput("selectType", "Emoji Style:", c("Open and Closed","Xs and Os","Bballs and Bricks", "Splash and Thumbs Down","Okay and Facepalm",
-                                                  "Thumbs Up and Nope"))
+      conditionalPanel(
+        condition = "input.inTabset != 'overview'",
+        selectInput("selectPlayer", "Select your player:",unique(namesdf$PLAYER_NAME)),
+        selectInput("selectLocation", "Home or Away:",unique(pbpshort$HOMEAWAY), multiple = TRUE),
+        selectInput("selectOpponent", "Opponent(s):",NULL, multiple = TRUE),
+        selectInput("selectGame", "Game(s):",unique(pbpshort$DATE_OPPONENT), multiple = TRUE),
+        selectInput("selectPeriod", "Period(s):",unique(pbpshort$PERIOD), multiple = TRUE),
+        selectInput("selectType", "Emoji Style:", c("Open and Closed","Xs and Os","Bballs and Bricks", "Splash and Thumbs Down","Okay and Facepalm",
+                                                    "Thumbs Up and Nope"))
+      ),
+      
+      conditionalPanel(
+        condition = "input.inTabset == 'overview'",
+        selectInput("selectTeam", "Select your team:",unique(teamsdf$TEAM_ABRV)))
+      
       
     ),
     mainPanel(
       
       
       tabsetPanel(type = "tabs",id = "inTabset",
-                  # tabPanel("Overview",
-                  #          tags$div(class = "plotContainer",
-                  #                   selectInput("selectTeams", "Limit to specific teams:",unique(teamsdf$TEAM), multiple = TRUE),
-                  #                   d3Output("mainPlot"),
-                  #                   tableOutput('mainTable')
-                  #          ) 
-                  # ),
+                  tabPanel("Overview",
+                           value = "overview",
+                           
+                                    d3Output("barPlot")
+                           )
+                  ,
                   tabPanel("Bohr Shot Diagram", 
                            value="Player",
                            tags$h4("The Borh atomic model is probably the model you learned in high school chemistry. The Bohr
@@ -73,20 +84,20 @@ ui <- fluidPage(
                            fluidRow(
                              column(width = 6, tableOutput('playerTable')),
                              column(width = 6, h2("EFG", br(), textOutput("efgLabel"))))
-                        
-                  ),
+                           
+                           ),
                   tabPanel("Shot Chart", 
                            value="shotchart",
                            # selectInput("selectPlayerShot", "Select your player:",unique(namesdf$PLAYER)),
                            # selectInput("selectPeriodShot", "Periods:",unique(pbpshort$PERIOD), multiple = TRUE),
                            # selectInput("selectShotType", "Emoji Style:", c("Open and Closed","Xs and Os","Bballs and Bricks")),
                            fluidRow(column(width = 7,d3Output("shotChart")),
-                           # fluidRow(
-                             column(width = 5, tableOutput('shotTable')),
-                             column(width = 5,offset = 7, h2("EFG", br(), textOutput("shotLabel"))))
+                                    # fluidRow(
+                                    column(width = 5, tableOutput('shotTable')),
+                                    column(width = 5,offset = 7, h2("EFG", br(), textOutput("shotLabel"))))
                            
                   )
-      )
+                  )
       # tags$div(class = "footer",
       #          tags$div(class = "footerItem",
       #                   tags$p("Made by ",
@@ -99,12 +110,24 @@ ui <- fluidPage(
       #                   )
       #          )
       # )
-    )
-  )
-  
+      
+      )
+    
+    # ),
+    # sidebarLayout(
+    #   sidebarPanel(
+    #     width = 3,
+    #     selectInput("selectTeam", "Select your team:",unique(teamsDF$TEAM_ABRV))
+    #     
+    #     
+    #   ),
+    #   mainPanel(d3Output("barPlot"))
+    #   
+    # )
     
   )
-  
+)
+
 server <- function(input, output, session) {
   observe({
     filtData <- pbpshort %>% filter(PLAYER_NAME %in% input$selectPlayer &!is.na(SHOT_DISTANCE))
@@ -112,38 +135,52 @@ server <- function(input, output, session) {
     # x <- input$selectPlayer
     if (isTruthy(input$selectLocation)) {
       filtData <-  filtData %>% filter(HOMEAWAY %in% input$selectLocation)
+      updateSelectInput(session, "selectOpponent",
+                        selected = input$selectOpponent,
+                        choices = unique(filtData$OPPONENT)
+                        
+      )
+      
+      updateSelectInput(session, "selectGame",
+                        selected = input$selectGame,
+                        choices = unique(filtData$DATE_OPPONENT)
+                        
+      )
+      updateSelectInput(session, "selectPeriod",
+                        selected = input$selectPeriod,
+                        choices = unique(uniqpr$PERIOD)
+                        
+      )
     }
     if (isTruthy(input$selectOpponent)) {
       filtData <-  filtData %>% filter(OPPONENT %in% input$selectOpponent)
+      
+      
+      updateSelectInput(session, "selectGame",
+                        selected = input$selectGame,
+                        choices = unique(filtData$DATE_OPPONENT)
+                        
+      )
+      updateSelectInput(session, "selectPeriod",
+                        selected = input$selectPeriod,
+                        choices = unique(uniqpr$PERIOD)
+                        
+      )
     }
     if (isTruthy(input$selectGame)) {
       filtData <-  filtData %>% filter(DATE_OPPONENT %in% input$selectGame)
+     
+      updateSelectInput(session, "selectPeriod",
+                        selected = input$selectPeriod,
+                        choices = unique(uniqpr$PERIOD)
+                        
+      )
     }
     
     if (isTruthy(input$selectPeriod)) {
       filtData <-  filtData %>% filter(PERIOD %in% input$selectPeriod) %>% arrange(PERIOD)
     }
-    # # Can use character(0) to remove all choices
-    # if (is.null(x))
-    #   x <- character(0)
-    # 
-    # Can also set the label and select items
-    updateSelectInput(session, "selectOpponent",
-                      
-                      choices = unique(filtData$OPPONENT)
-                      
-    )
     
-    updateSelectInput(session, "selectGame",
-                      
-                      choices = unique(filtData$DATE_OPPONENT)
-                      
-    )
-    updateSelectInput(session, "selectPeriod",
-                      
-                      choices = unique(uniqpr$PERIOD)
-                      
-    )
   })
   
   
@@ -191,6 +228,7 @@ server <- function(input, output, session) {
     if (isTruthy(input$selectPeriod)) {
       filteredata <-  filteredata %>% filter(PERIOD %in% input$selectPeriod)
     }
+    
     r2d3(
       data = filteredata,
       script = "bohr-shot-diagram.js",
@@ -210,10 +248,11 @@ server <- function(input, output, session) {
     if (isTruthy(input$selectGame)) {
       filteredata <-  filteredata %>% filter(DATE_OPPONENT %in% input$selectGame)
     }
-   
+    
     if (isTruthy(input$selectPeriod)) {
       filteredata <-  filteredata %>% filter(PERIOD %in% input$selectPeriod)
     }
+    
     r2d3(
       data = filteredata,
       script = "shot-chart.js",
@@ -240,9 +279,9 @@ server <- function(input, output, session) {
     if (isTruthy(input$selectPeriod)) {
       filteredata <-  filteredata %>% filter(PERIOD %in% input$selectPeriod)
     }
-
+    
     stats <- filteredata %>% group_by(PLAYER_NAME, RANGE) %>% summarise(FGM = sum(SHOT_MADE_FLAG),FGA = sum(SHOT_ATTEMPTED_FLAG),
-                                                                 FG_PERCENTAGE = FGM/FGA, PPS =sum(SHOT_MADE_FLAG * SHOT_VALUE/FGA))
+                                                                        FG_PERCENTAGE = FGM/FGA, PPS =sum(SHOT_MADE_FLAG * SHOT_VALUE/FGA))
     stats %>%
       arrange(factor(RANGE, levels = c("RIM","SMR","LMR","3PT")))
   })
@@ -265,9 +304,9 @@ server <- function(input, output, session) {
     }
     
     stats <- filteredata %>% group_by(PLAYER_NAME) %>% summarise(FGM = sum(SHOT_MADE_FLAG),FGA = sum(SHOT_ATTEMPTED_FLAG),
-                                                                       PTS  = sum(SHOT_MADE_FLAG * SHOT_VALUE), EFG = PTS/(FGA*2))
+                                                                 PTS  = sum(SHOT_MADE_FLAG * SHOT_VALUE), EFG = PTS/(FGA*2))
     sprintf("%.*f%%", 1,100*stats$EFG)
-  
+    
   })
   
   output$shotTable <- renderTable({
@@ -314,6 +353,19 @@ server <- function(input, output, session) {
     stats <- filteredata %>% group_by(PLAYER_NAME) %>% summarise(FGM = sum(SHOT_MADE_FLAG),FGA = sum(SHOT_ATTEMPTED_FLAG),
                                                                  PTS  = sum(SHOT_MADE_FLAG * SHOT_VALUE), EFG = PTS/(FGA*2))
     sprintf("%.*f%%", 1,100*stats$EFG)
+    
+  })
+  output$barPlot <- renderD3({
+    wideRatio <- longTeam %>% spread(TEAM_ABRV,shotRangeRatio) %>% select("RANGE",'ATL':'WAS')%>%group_by(RANGE) %>%
+      summarise_all(funs(na.omit(.)[1]))
+    filterdata <- longTeam
+    if (isTruthy(input$selectTeam)) {
+      
+      filterdata <-  longTeam %>% filter(TEAM_ABRV %in% input$selectTeam)
+    }
+    r2d3(
+      data = wideRatio ,
+      script = "bar-plot.js")
     
   })
   
