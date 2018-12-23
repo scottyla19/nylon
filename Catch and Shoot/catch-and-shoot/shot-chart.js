@@ -33,6 +33,119 @@
 
 //     console.log(  twemoji.parse(twemoji.convert.fromCodePoint('274c')))
 
+var teams = [
+  "ATL",
+  "BOS",
+  "BKN",
+  "CHA",
+  "CHI",
+  "CLE",
+  "DAL",
+  "DEN",
+  "DET",
+  "GSW",
+  "HOU",
+  "IND",
+  "LAC",
+  "LAL",
+  "MEM",
+  "MIA",
+  "MIL",
+  "MIN",
+  "NOP",
+  "NYK",
+  "OKC",
+  "ORL",
+  "PHI",
+  "PHX",
+  "POR",
+  "SAC",
+  "SAS",
+  "TOR",
+  "UTA",
+  "WAS"
+];
+var fillColors = [
+  "#e0393e",
+  "#007a33",
+  "#000000",
+  "#1D1160",
+  "#ce1141",
+  "#6F263D",
+  "#00538c",
+  "#0E2240",
+  "#C8102E",
+  "#006BB6",
+  "#CE1141",
+  "#002D62",
+  "#C8102E",
+  "#552583",
+  "#5D76A9",
+  "#98002E",
+  "#00471B",
+  "#0C2340",
+  "#0C2340",
+  "#006BB6",
+  "#007AC1",
+  "#0077C0",
+  "#006BB6",
+  "#1D1160",
+  "#E03A3E",
+  "#5A2D81",
+  "#C4CED4",
+  "#CE1141",
+  "#002B5C",
+  "#002B5C"
+];
+
+var strokeColors = [
+  "#C1D32F",
+  "#ffffff",
+  "#FFFFFF",
+  "#00788C",
+  "#000000",
+  "#FFB81C",
+  "#B8C4CA",
+  "#FEC524",
+  "#006BB6",
+  "#FDB927",
+  "#C4CED4",
+  "#FDBB30",
+  "#1D42BA",
+  "#FDB927",
+  "#12173F",
+  "#F9A01B",
+  "#EEE1C6",
+  "#9EA2A2",
+  "#C8102E",
+  "#F58426",
+  "#EF3B24",
+  "#C4CED4",
+  "#ED174C",
+  "#E56020",
+  "#000000",
+  "#63727A",
+  "#000000",
+  "#B4975A",
+  "#F9A01B",
+  "#E31837"
+];
+
+
+var distanceScale = d3
+  .scaleLinear()
+  .domain([0, 40])
+  .range([0, 40]);
+var fillScale = d3
+  .scaleOrdinal()
+  .domain(teams)
+  .range(fillColors);
+
+var strokeScale = d3
+  .scaleOrdinal()
+  .domain(teams)
+  .range(strokeColors);
+
 var sizeMultiplier = 13;
 var margin = { top: 20, right: 20, bottom: 20, left: 20 };
 width = 50 * sizeMultiplier; //- margin.left - margin.right;
@@ -253,6 +366,39 @@ function plotGraph() {
     //       return "1";
     //     }
     //   })
+    .on("mouseover", function(d) {
+      div
+        .transition()
+        .duration(200)
+        .style("opacity", 0.9);
+      div
+        .html(
+          
+            "Game: " +
+            d.DATE_OPPONENT +
+            "<br/> Period: " +
+            d.PERIOD +
+            " " +
+            "Time: " +
+            d.MINUTES_REMAINING +
+            ":" +
+            d.SECONDS_REMAINING +
+            " <br/> Distance: " +
+            d.SHOT_DISTANCE +
+            " FT"
+        )
+        .style("background-color", fillScale(d.TEAM_ABRV))
+        .style("border", "2px solid " + strokeScale(d.TEAM_ABRV))
+        .style("color", strokeScale(d.team))
+        .style("left", d3.event.pageX + 20 + "px")
+        .style("top", d3.event.pageY - 28 + "px");
+    })
+    .on("mouseout", function(d) {
+      div
+        .transition()
+        .duration(500)
+        .style("opacity", 0);
+    })
     .attr("fill-opacity", function(d) {
       if (d.EVENT_TYPE === "Missed Shot" && options.emoji ==="Open and Closed") {
         return "0";

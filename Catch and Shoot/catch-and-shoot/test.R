@@ -48,11 +48,12 @@ allNBA <- teamStatsByRange %>% group_by(RANGE) %>% summarise(TEAM_ABRV = "All" ,
                                                              PTS_range = sum(PTS_range), EFG = mean(EFG), FGM_total = sum(.$FGM_range), FGA_total = sum(.$FGA_range), PTS_total= sum(.$PTS_range),
                                                              PPS_range = PTS_range/FGA_range,shotRangeRatio = mean(shotRangeRatio), PPS_total = sum(.$PTS_range)/sum(.$FGA_range))
 teamStatsByRange <- rbind(teamStatsByRange, allNBA)
+# teamStatsByRange[,-1:-2] <- round(teamStatsByRange[,-1:-2],3)
 # teamStatsByRange <- teamStatsByRange %>% add_row(allNBA)
-wideRatio <- teamStatsByRange %>% spread(TEAM_ABRV,shotRangeRatio) %>% select("RANGE",'ATL':'WAS')%>%group_by(RANGE) %>%
-  summarise_all(funs(na.omit(.)[1]))
-widePPS <- teamStatsByRange %>% spread(TEAM_ABRV,PPS_range)  %>% select("RANGE",'ATL':'WAS')%>%group_by(RANGE) %>%
-  summarise_all(funs(na.omit(.)[1]))
+# wideRatio <- teamStatsByRange %>% spread(TEAM_ABRV,shotRangeRatio) %>% select(c(1,12:ncol(.)))%>%group_by(RANGE) %>%
+#   summarise_all(funs(na.omit(.)[1]))
+# widePPS <- teamStatsByRange %>% spread(TEAM_ABRV,PPS_range)  %>% select("RANGE",'ATL':'WAS')%>%group_by(RANGE) %>%
+#   summarise_all(funs(na.omit(.)[1]))
 
 # 
 # ggplot(data=teamStatsByRange, aes(x=TEAM_NAME, y=shotRangeRatio, fill=RANGE)) +
@@ -63,4 +64,5 @@ widePPS <- teamStatsByRange %>% spread(TEAM_ABRV,PPS_range)  %>% select("RANGE",
 #   geom_bar( aes(x=TEAM_NAME, y=shotRangeRatio, fill=RANGE),stat="identity", position=position_dodge())
 
 write_csv(teamStatsByRange,"longTeamByRange.csv")
+write_csv(pbp,"all-log-short.csv")
 

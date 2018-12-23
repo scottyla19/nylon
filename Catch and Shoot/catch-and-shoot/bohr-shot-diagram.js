@@ -152,15 +152,15 @@ function plotGraph() {
     .scaleLinear()
     .domain([0, 40])
     .range([0, 40]);
-  // var fillScale = d3
-  //   .scaleOrdinal()
-  //   .domain(teams)
-  //   .range(fillColors);
+  var fillScale = d3
+    .scaleOrdinal()
+    .domain(teams)
+    .range(fillColors);
 
-  // var strokeScale = d3
-  //   .scaleOrdinal()
-  //   .domain(teams)
-  //   .range(strokeColors);
+  var strokeScale = d3
+    .scaleOrdinal()
+    .domain(teams)
+    .range(strokeColors);
   //svg.selectAll("*").remove();
 
   //svg.style("fill","black")
@@ -286,6 +286,7 @@ function plotGraph() {
       game: d.DATE_OPPONENT,
       shotOutcome: d.EVENT_TYPE,
       shotType: d.SHOT_TYPE,
+      team: d.TEAM_ABRV,
       imgID: "grump_avatar" + i
     });
   });
@@ -358,6 +359,9 @@ function plotGraph() {
             d.distance +
             " FT"
         )
+        .style("background-color", fillScale(d.team))
+        .style("border", "2px solid " + strokeScale(d.team))
+        .style("color", strokeScale(d.team))
         .style("left", d3.event.pageX + 20 + "px")
         .style("top", d3.event.pageY - 28 + "px");
     })
