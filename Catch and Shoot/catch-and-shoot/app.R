@@ -32,6 +32,7 @@ ui <- fluidPage(
   ),
   
   titlePanel("NBA Emoji Charts"),
+  tags$h3 ("🏀 + 📊 = ❤️️"),
   
   
   sidebarLayout(
@@ -68,7 +69,7 @@ ui <- fluidPage(
                   ,
                   tabPanel("Bohr Shot Diagram", 
                            value="Player",
-                           tags$h4("The Borh atomic model is probably the model you learned in high school chemistry. The Bohr
+                           tags$h4("The Bohr atomic model is most likely the model of the atom you learned in high school chemistry. The Bohr
                                    model is a simplified model of the atom and is useful for understanding the basics but lacks the details of
                                    quantum mechanics. The Bohr shot diagram is similar, as it models only distance and lacks details available 
                                    in tracking data. Oh well, at least we can emojify it."),
@@ -84,8 +85,8 @@ ui <- fluidPage(
                            
                            fluidRow(column(width = 7,d3Output("shotChart")),
                                     
-                                    column(width = 5, tableOutput('shotTable')),
-                                    column(width = 5,offset = 7, h2("EFG", br(), textOutput("shotLabel"))))
+                                    column(width = 4,tableOutput('shotTable')),
+                                    column(width = 3,offset =9, h2("EFG", br(), textOutput("shotLabel"))))
                            
                   )
                   )

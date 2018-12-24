@@ -113,7 +113,7 @@ var div = d3
   .style("opacity", 0);
 
 var margin = { top: 20, right: 20, bottom: 40, left: 40 },
-  width = 1200 - margin.left - margin.right,
+  width = width - margin.left - margin.right,
   height = height - margin.top - margin.bottom;
 
 // set the ranges
@@ -285,16 +285,16 @@ g.append("g")
             .attr("transform", function(d) {
                 return "translate(0,22)"
                 });
-g.append("g")
-  .attr("transform", "translate(0," + (height) + ")")
-  .call(d3.axisBottom(x1).tickSize(0))
-  .selectAll("text")	
-            .style("text-anchor", "start")
-            // .attr("dx", ".1em")
-            .attr("dy", "-.04em")
-            .attr("transform", function(d) {
-                return "rotate(90)" 
-                });
+// g.append("g")
+//   .attr("transform", "translate(0," + (height) + ")")
+//   .call(d3.axisBottom(x1).tickSize(0))
+//   .selectAll("text")	
+//             .style("text-anchor", "start")
+//             // .attr("dx", ".1em")
+//             .attr("dy", "-.04em")
+//             .attr("transform", function(d) {
+//                 return "rotate(90)" 
+//                 });
 
 
 // add the y Axis

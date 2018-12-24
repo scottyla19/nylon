@@ -146,7 +146,7 @@ var strokeScale = d3
   .domain(teams)
   .range(strokeColors);
 
-var sizeMultiplier = 13;
+var sizeMultiplier = 12.5;
 var margin = { top: 20, right: 20, bottom: 20, left: 20 };
 width = 50 * sizeMultiplier; //- margin.left - margin.right;
 height = 47 * sizeMultiplier; //   - margin.top - margin.bottom;
