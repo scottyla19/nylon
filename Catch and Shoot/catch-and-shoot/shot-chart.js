@@ -228,8 +228,8 @@ function drawArc(startAngle, endAngle, radius, cx, cy) {
 }
 
 drawArc(
-  2.02,
-  2 * Math.PI - 2.02,
+  2.03,
+  2 * Math.PI - 2.03,
   23.75 * sizeMultiplier,
   centerX,
   5.0 * sizeMultiplier

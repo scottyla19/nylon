@@ -31,7 +31,7 @@ ui <- fluidPage(
     # tags$link(href="https://fonts.googleapis.com/css?family=Gothic+A1", rel="stylesheet")
   ),
   
-  titlePanel("NBA Emoji Charts"),
+  titlePanel("NBA Shot Range Emoji Charts"),
   tags$h3 ("🏀 + 📊 = ❤️️"),
   
   
