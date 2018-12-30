@@ -589,7 +589,12 @@ function plotGraph() {
     legend
       .append("image")
       .attr("xlink:href", function(d, i) {
-        return legendRange[i];
+        if (i == 0) {
+          return missImg;
+        } else {
+          return makeImg;
+        }
+        // return legendRange[i];
       })
       // .attr('class', 'avengers')
       .attr("height", "16")

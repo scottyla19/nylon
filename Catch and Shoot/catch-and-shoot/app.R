@@ -86,7 +86,7 @@ ui <- fluidPage(
                            fluidRow(column(width = 7,d3Output("shotChart")),
                                     
                                     column(width = 4,tableOutput('shotTable')),
-                                    column(width = 3,offset =9, h2("EFG", br(), textOutput("shotLabel"))))
+                                    column(width = 3, offset =9, h2("EFG", br(), textOutput("shotLabel"))))
                            
                   )
                   )
@@ -113,6 +113,25 @@ server <- function(input, output, session) {
   observe({
     filtData <- pbpshort %>% filter(PLAYER_NAME %in% input$selectPlayer &!is.na(SHOT_DISTANCE))
     uniqpr <- filtData %>% arrange(PERIOD)
+    if (isTruthy(input$selectPlayer)) {
+      
+      updateSelectInput(session, "selectOpponent",
+                        selected = input$selectOpponent,
+                        choices = unique(filtData$OPPONENT)
+                        
+      )
+      
+      updateSelectInput(session, "selectGame",
+                        selected = input$selectGame,
+                        choices = unique(filtData$DATE_OPPONENT)
+                        
+      )
+      updateSelectInput(session, "selectPeriod",
+                        selected = input$selectPeriod,
+                        choices = unique(uniqpr$PERIOD)
+                        
+      )
+    }
     if (isTruthy(input$selectLocation)) {
       filtData <-  filtData %>% filter(HOMEAWAY %in% input$selectLocation)
       updateSelectInput(session, "selectOpponent",
