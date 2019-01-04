@@ -609,7 +609,11 @@ function plotGraph() {
     .attr("y", 16)
     //.attr("dy", ".35em")
     .text(function(d, i) {
-      return d;
+      if (i == 0) {
+        return "Missed Shot";
+      } else {
+        return "Made Shot";
+      }
     })
     .attr("class", "textselected")
     .style("text-anchor", "start")

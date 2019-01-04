@@ -469,31 +469,39 @@ var legendVals = d3.set(data.map( function(d) { return d.EVENT_TYPE } ) ).values
           .style("stroke", "black")
          
           // })
-      }else{
-          legend
-          .append('image')
-          .attr('xlink:href',function (d, i) {
-              return legendRange[i]
+      }else {
+        legend
+          .append("image")
+          .attr("xlink:href", function(d, i) {
+            if (i == 0) {
+              return missImg;
+            } else {
+              return makeImg;
+            }
+            // return legendRange[i];
           })
           // .attr('class', 'avengers')
-              .attr('height', '16')
-              .attr('width', '16')
-              .attr('x', 0)
-              .attr('y', 0)
+          .attr("height", "16")
+          .attr("width", "16")
+          .attr("x", 0)
+          .attr("y", 0);
       }
-      
-      
-
-      legend.append('text')
-          .attr("x", 20)
-          .attr("y", 16)
-      //.attr("dy", ".35em")
-      .text(function (d, i) {
-          return d
-      })
-          .attr("class", "textselected")
-          .style("text-anchor", "start")
-          .style("font-size", 15)
+    
+      legend
+        .append("text")
+        .attr("x", 20)
+        .attr("y", 16)
+        //.attr("dy", ".35em")
+        .text(function(d, i) {
+          if (i == 0) {
+            return "Missed Shot";
+          } else {
+            return "Made Shot";
+          }
+        })
+        .attr("class", "textselected")
+        .style("text-anchor", "start")
+        .style("font-size", 15);
 
 
 }

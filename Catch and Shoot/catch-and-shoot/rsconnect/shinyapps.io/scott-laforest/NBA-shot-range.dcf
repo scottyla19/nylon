@@ -5,9 +5,9 @@ account: scott-laforest
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 622775
-bundleId: 1789359
+bundleId: 1789584
 url: https://scott-laforest.shinyapps.io/NBA-shot-range/
-when: 1546172939.83056
+when: 1546182996.51382
 asMultiple: FALSE
 asStatic: FALSE
 ignoredFiles: .RData|.ipynb_checkpoints/Untitled-checkpoint.ipynb
